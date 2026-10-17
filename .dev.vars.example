@@ -1,0 +1,4 @@
+# Copy to .dev.vars for local development (it is git-ignored).
+RESEND_API_KEY=re_your_key_here
+CONTACT_FROM_EMAIL="Website <onboarding@resend.dev>"
+EXAMPLE_API_KEY=

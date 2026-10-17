@@ -1,0 +1,142 @@
+---
+import { SITE } from '../site';
+---
+
+<form class="form card" id="contact-form" action="/api/contact" method="post" novalidate>
+  <div class="row">
+    <label>
+      <span>Full name *</span>
+      <input name="name" type="text" autocomplete="name" required maxlength="120" />
+    </label>
+    <label>
+      <span>Email address *</span>
+      <input name="email" type="email" autocomplete="email" required maxlength="200" />
+    </label>
+  </div>
+  <label>
+    <span>Message *</span>
+    <textarea name="message" rows="5" required maxlength="5000"></textarea>
+  </label>
+  <!-- Honeypot: humans never see or fill this -->
+  <input class="hp" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
+  <div class="submit-row">
+    <button class="btn btn-primary" type="submit">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        ><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg
+      >
+      Send message
+    </button>
+    <p class="status" role="status" aria-live="polite"></p>
+  </div>
+</form>
+
+<script define:vars={{ email: SITE.email }}>
+  const form = document.getElementById('contact-form');
+  const status = form.querySelector('.status');
+  const button = form.querySelector('button');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    const data = Object.fromEntries(new FormData(form));
+    button.disabled = true;
+    status.className = 'status';
+    status.textContent = 'Sending…';
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || 'Request failed');
+      form.reset();
+      status.classList.add('ok');
+      status.textContent = 'Thanks! Your message has been sent - I will be in touch soon.';
+    } catch (err) {
+      // Backend not configured (or offline): fall back to the visitor's email app.
+      const subject = encodeURIComponent('Website enquiry from ' + data.name);
+      const bodyText = encodeURIComponent(data.message + '\n\n' + data.name + ' <' + data.email + '>');
+      status.classList.add('err');
+      status.innerHTML =
+        'Could not send right now. <a href="mailto:' + email + '?subject=' + subject + '&body=' + bodyText + '">Email me directly instead</a>.';
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  .form {
+    display: grid;
+    gap: 1.1rem;
+    padding: 2rem;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.1rem;
+  }
+  label {
+    display: grid;
+    gap: 0.4rem;
+  }
+  label span {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  input,
+  textarea {
+    font: inherit;
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 0.75rem 0.95rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 18%, transparent);
+  }
+  textarea {
+    resize: vertical;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+  .submit-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .status {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .status.ok {
+    color: #12925a;
+  }
+  .status.err {
+    color: #c2410c;
+  }
+  button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+  @media (max-width: 720px) {
+    .form {
+      padding: 1.25rem;
+    }
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

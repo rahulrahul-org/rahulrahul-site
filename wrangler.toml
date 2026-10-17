@@ -1,0 +1,9 @@
+# Cloudflare Pages config (used by `wrangler pages dev` and `wrangler pages deploy`).
+name = "rahulrahul"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-10-01"
+
+# Non-secret variables. Put secrets (API keys) in .dev.vars locally
+# and in the Cloudflare dashboard for production - never in this file.
+[vars]
+CONTACT_TO_EMAIL = "rahul@rahulrahul.com.au"

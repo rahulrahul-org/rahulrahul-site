@@ -1,0 +1,212 @@
+/* ---------- Design tokens ---------- */
+:root {
+  --bg: #f6f8fc;
+  --surface: #ffffff;
+  --surface-2: #eef3fa;
+  --text: #0e1a2b;
+  --muted: #4a5a70;
+  --border: #dbe3ee;
+  --brand: #1f6fe0;
+  --brand-strong: #1557b8;
+  --brand-soft: #e3edfc;
+  --accent: #10b5c9;
+  --hero-from: #08162e;
+  --hero-to: #0f2d5c;
+  --shadow: 0 1px 2px rgb(14 26 43 / 0.04), 0 8px 24px rgb(14 26 43 / 0.06);
+  --shadow-lg: 0 2px 4px rgb(14 26 43 / 0.05), 0 18px 48px rgb(14 26 43 / 0.12);
+  --radius: 16px;
+  --font-head: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body: 'Open Sans', system-ui, sans-serif;
+  --max: 1160px;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0a1220;
+  --surface: #111c2e;
+  --surface-2: #16243a;
+  --text: #e7eef8;
+  --muted: #9fb0c6;
+  --border: #22324a;
+  --brand: #5a9cff;
+  --brand-strong: #82b4ff;
+  --brand-soft: #172c4d;
+  --accent: #3fd0e0;
+  --hero-from: #050c18;
+  --hero-to: #0c2246;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px rgb(0 0 0 / 0.25);
+  --shadow-lg: 0 2px 4px rgb(0 0 0 / 0.3), 0 18px 48px rgb(0 0 0 / 0.4);
+  color-scheme: dark;
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s, color 0.2s;
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-head);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5em;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+a {
+  color: var(--brand);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--brand-strong);
+}
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.container {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.4rem;
+  border-radius: 999px;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, background-color 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.btn:hover {
+  transform: translateY(-1px);
+}
+.btn svg {
+  width: 18px;
+  height: 18px;
+}
+.btn-primary {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 6px 18px rgb(31 111 224 / 0.3);
+}
+.btn-primary:hover {
+  background: var(--brand-strong);
+  color: #fff;
+}
+.btn-ghost {
+  border-color: var(--border);
+  color: var(--text);
+  background: var(--surface);
+}
+.btn-ghost:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+/* ---------- Sections ---------- */
+.section {
+  padding: 96px 0;
+}
+.section-alt {
+  background: var(--surface);
+  border-block: 1px solid var(--border);
+}
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 0.75rem;
+}
+.section-title {
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  margin-bottom: 0.6rem;
+}
+.section-lead {
+  color: var(--muted);
+  max-width: 640px;
+  margin: 0 0 3rem;
+  font-size: 1.08rem;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Fade-up on scroll (enabled by a tiny script in Base layout) */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (max-width: 720px) {
+  body {
+    font-size: 16px;
+  }
+  .container {
+    padding: 0 16px;
+  }
+  .section {
+    padding: 64px 0;
+  }
+}

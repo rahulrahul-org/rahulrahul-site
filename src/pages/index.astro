@@ -1,0 +1,768 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import ContactForm from '../components/ContactForm.astro';
+import portrait from '../assets/rahul.webp';
+import { SITE, HERO, ABOUT, JOURNEY, IMPACT, CREDENTIALS } from '../site';
+import { getPosts } from '../utils';
+
+const latest = (await getPosts()).slice(0, 3);
+const icon = {
+  mail: '<path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 6-10 7L2 6"/>',
+  phone:
+    '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  globe: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+  check: '<path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4 12 14l-3-3"/>',
+  award: '<circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/>',
+  cap: '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>',
+};
+const consultHref = `mailto:${SITE.email}?subject=${encodeURIComponent('Consultation request')}`;
+---
+
+<Base>
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="home">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="badge"><span class="dot"></span>{HERO.badge}</span>
+        <h1>
+          Cloud Data &amp; AI<br /><span class="grad">Transformation Leader</span>
+        </h1>
+        <p class="lead">{HERO.intro}</p>
+        <div class="cta">
+          <a class="btn btn-primary" href={consultHref}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" set:html={icon.calendar} />
+            Schedule Consultation
+          </a>
+          <a class="btn btn-outline-light" href={SITE.resume} download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" set:html={icon.download} />
+            Download Resume
+          </a>
+        </div>
+        <dl class="hero-stats">
+          {
+            HERO.stats.map((s) => (
+              <div>
+                <dt>{s.value}</dt>
+                <dd>{s.label}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      <div class="hero-visual">
+        <div class="portrait">
+          <Image src={portrait} alt="Rahul - Cloud Data and AI Transformation Leader" widths={[360, 560, 760]} sizes="(max-width: 900px) 80vw, 420px" loading="eager" fetchpriority="high" />
+        </div>
+        <div class="chip chip-cert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" set:html={icon.check} />
+          Certified Expert · AWS &amp; Azure
+        </div>
+        <ul class="chip contact-chip">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" set:html={icon.mail} />
+            <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" set:html={icon.phone} />
+            <a href={SITE.phoneHref}>{SITE.phone}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== About ===== -->
+  <section class="section" id="about">
+    <div class="container about-grid">
+      <div data-reveal>
+        <span class="eyebrow">About Rahul</span>
+        <h2 class="section-title">Strategy that ships. Architecture that lasts.</h2>
+        <p class="about-text">{ABOUT.text}</p>
+        <ul class="chips">{ABOUT.expertise.map((e) => <li>{e}</li>)}</ul>
+      </div>
+      <div class="highlight card" data-reveal>
+        <span class="big">{ABOUT.highlight.value}</span>
+        <p>{ABOUT.highlight.label}</p>
+        <a href="#impact" class="link">See measurable impact →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Journey ===== -->
+  <section class="section section-alt" id="journey">
+    <div class="container">
+      <span class="eyebrow">Professional Journey</span>
+      <h2 class="section-title">Career Highlights</h2>
+      <p class="section-lead">From hyperscaler to Tier 1 banking - leading cloud, data and AI programmes where the stakes are highest.</p>
+      <ol class="timeline">
+        {
+          JOURNEY.map((j) => (
+            <li class="tl-item" data-reveal>
+              <span class="tl-badge">{j.short}</span>
+              <div class="tl-card card">
+                <div class="tl-head">
+                  <div>
+                    <h3>{j.role}</h3>
+                    <p class="org">{j.org}</p>
+                  </div>
+                  <span class="period">{j.period}</span>
+                </div>
+                <p>{j.summary}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== Impact ===== -->
+  <section class="section impact" id="impact">
+    <div class="container">
+      <span class="eyebrow light">Key Achievements</span>
+      <h2 class="section-title">Delivering Measurable Impact</h2>
+      <div class="impact-grid">
+        {
+          IMPACT.map((m) => (
+            <div class="metric" data-reveal>
+              <span
+                class="metric-value"
+                data-count={m.target}
+                data-prefix={m.prefix ?? ''}
+                data-suffix={m.suffix ?? ''}
+                data-decimals={m.decimals ?? 0}
+              >
+                {(m.prefix ?? '') + m.target + (m.suffix ?? '')}
+              </span>
+              <span class="metric-label">{m.label}</span>
+            </div>
+          ))
+        }
+      </div>
+      <a class="btn btn-outline-light" href="#contact">Explore how I can help your organisation →</a>
+    </div>
+  </section>
+
+  <!-- ===== Latest case studies ===== -->
+  <section class="section" id="case-studies">
+    <div class="container">
+      <div class="split-head">
+        <div>
+          <span class="eyebrow">Case Studies &amp; Blogs</span>
+          <h2 class="section-title">Real transformation stories</h2>
+          <p class="section-lead">Context, method, result and learning - from regulated enterprises to start-ups.</p>
+        </div>
+        <a class="btn btn-ghost" href="/blogs">View all posts →</a>
+      </div>
+      <div class="posts">{latest.map((post, i) => <PostCard post={post} index={i} />)}</div>
+    </div>
+  </section>
+
+  <!-- ===== Credentials ===== -->
+  <section class="section section-alt" id="credentials">
+    <div class="container">
+      <span class="eyebrow">Credentials</span>
+      <h2 class="section-title">Credentials &amp; Continuous Learning</h2>
+      <p class="section-lead">Building expertise through education and industry-recognised certifications.</p>
+      <div class="cred-grid">
+        <div class="cred card" data-reveal>
+          <span class="cred-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" set:html={icon.cap} /></span>
+          <div>
+            <p class="cred-kind">Education</p>
+            <h3>{CREDENTIALS.education}</h3>
+          </div>
+        </div>
+        {
+          CREDENTIALS.certifications.map((c) => (
+            <div class="cred card" data-reveal>
+              <span class="cred-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" set:html={icon.award} />
+              </span>
+              <div>
+                <p class="cred-kind">Certification</p>
+                <h3>{c}</h3>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+      <p class="note">{CREDENTIALS.note}</p>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section class="section" id="contact">
+    <div class="container contact-grid">
+      <div>
+        <span class="eyebrow">Get in touch</span>
+        <h2 class="section-title">Ready to transform your business?</h2>
+        <p class="section-lead">Let's discuss how I can help modernise your cloud and data infrastructure.</p>
+        <ul class="info">
+          <li>
+            <span class="cred-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" set:html={icon.mail} /></span>
+            <div><small>Email</small><a href={`mailto:${SITE.email}`}>{SITE.email}</a></div>
+          </li>
+          <li>
+            <span class="cred-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" set:html={icon.phone} /></span>
+            <div><small>Phone</small><a href={SITE.phoneHref}>{SITE.phone}</a></div>
+          </li>
+          <li>
+            <span class="cred-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" set:html={icon.globe} /></span>
+            <div><small>Website</small><a href="/">{SITE.website}</a></div>
+          </li>
+        </ul>
+        <a class="btn btn-ghost" href={SITE.resume} download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" set:html={icon.download} />
+          Download full resume
+        </a>
+      </div>
+      <ContactForm />
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Count-up animation for the impact metrics.
+  const els = document.querySelectorAll<HTMLElement>('[data-count]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const run = (el: HTMLElement) => {
+    const target = Number(el.dataset.count);
+    const decimals = Number(el.dataset.decimals);
+    const { prefix = '', suffix = '' } = el.dataset;
+    const start = performance.now();
+    const dur = 1400;
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = prefix + (target * eased).toFixed(decimals) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+  if (!reduce) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          run(e.target as HTMLElement);
+          io.unobserve(e.target);
+        }
+      }
+    });
+    els.forEach((el) => io.observe(el));
+  }
+</script>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    background: linear-gradient(140deg, var(--hero-from) 0%, var(--hero-to) 100%);
+    padding: 88px 0 104px;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(600px 400px at 85% 15%, rgb(16 181 201 / 0.28), transparent 70%),
+      radial-gradient(700px 500px at 10% 100%, rgb(31 111 224 / 0.35), transparent 70%);
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 75%);
+  }
+  .hero-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    align-items: center;
+    gap: 64px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.08);
+    border: 1px solid rgb(255 255 255 / 0.16);
+    font-family: var(--font-head);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #34d399;
+    box-shadow: 0 0 0 4px rgb(52 211 153 / 0.25);
+  }
+  h1 {
+    font-size: clamp(2.4rem, 5.4vw, 4rem);
+    font-weight: 800;
+    margin: 1.25rem 0 1.25rem;
+    letter-spacing: -0.03em;
+  }
+  .grad {
+    background: linear-gradient(90deg, #7cc0ff, #5ee6f0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .lead {
+    font-size: 1.15rem;
+    color: #c6d4ea;
+    max-width: 560px;
+    margin: 0 0 2rem;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-bottom: 2.75rem;
+  }
+  :global(.btn-outline-light) {
+    border-color: rgb(255 255 255 / 0.35);
+    color: #fff;
+    background: rgb(255 255 255 / 0.04);
+  }
+  :global(.btn-outline-light:hover) {
+    border-color: #fff;
+    background: rgb(255 255 255 / 0.12);
+    color: #fff;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin: 0;
+    padding-top: 1.75rem;
+    border-top: 1px solid rgb(255 255 255 / 0.12);
+  }
+  .hero-stats dt {
+    font-family: var(--font-head);
+    font-size: 2rem;
+    font-weight: 800;
+  }
+  .hero-stats dd {
+    margin: 0;
+    color: #9fb3d1;
+    font-size: 0.9rem;
+  }
+  .hero-visual {
+    position: relative;
+    justify-self: center;
+    width: min(100%, 420px);
+  }
+  .portrait {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 0.15);
+    box-shadow: 0 30px 80px rgb(0 0 0 / 0.45);
+  }
+  .portrait::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, #5ea8ff, #10b5c9);
+    z-index: -1;
+  }
+  .portrait :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 58% 30%;
+  }
+  .chip {
+    position: absolute;
+    background: rgb(255 255 255 / 0.96);
+    color: #0e1a2b;
+    border-radius: 14px;
+    box-shadow: 0 14px 40px rgb(0 0 0 / 0.3);
+    font-size: 0.85rem;
+  }
+  .chip svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    color: var(--brand);
+  }
+  .chip-cert {
+    top: 24px;
+    left: -36px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    font-family: var(--font-head);
+    font-weight: 700;
+  }
+  .contact-chip {
+    right: -12px;
+    bottom: -26px;
+    list-style: none;
+    margin: 0;
+    padding: 0.8rem 1rem;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .contact-chip li {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  .contact-chip a {
+    color: #0e1a2b;
+    text-decoration: none;
+  }
+  .contact-chip a:hover {
+    color: #1f6fe0;
+  }
+
+  /* ---------- About ---------- */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .about-text {
+    font-size: 1.12rem;
+    color: var(--muted);
+    margin: 0 0 1.75rem;
+  }
+  .chips {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+  .chips li {
+    padding: 0.45rem 0.95rem;
+    border-radius: 999px;
+    background: var(--brand-soft);
+    color: var(--brand-strong);
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+  .highlight {
+    padding: 2.25rem;
+    background:
+      radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
+      var(--surface);
+  }
+  .big {
+    display: block;
+    font-family: var(--font-head);
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    background: linear-gradient(90deg, var(--brand), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 0.75rem;
+  }
+  .highlight p {
+    color: var(--muted);
+    margin: 0 0 1.25rem;
+  }
+  .link {
+    font-family: var(--font-head);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  /* ---------- Timeline ---------- */
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: grid;
+    gap: 1.25rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 27px;
+    top: 12px;
+    bottom: 12px;
+    width: 2px;
+    background: linear-gradient(var(--brand), var(--accent));
+    opacity: 0.35;
+  }
+  .tl-item {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .tl-badge {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--surface);
+    border: 2px solid var(--brand);
+    color: var(--brand);
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 0.85rem;
+  }
+  .tl-card {
+    padding: 1.4rem 1.6rem;
+  }
+  .tl-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+  .tl-card h3 {
+    font-size: 1.15rem;
+    margin: 0;
+  }
+  .org {
+    margin: 0.1rem 0 0;
+    color: var(--brand);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .period {
+    align-self: start;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 0.82rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .tl-card > p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  /* ---------- Impact ---------- */
+  .impact {
+    color: #fff;
+    background:
+      radial-gradient(600px 300px at 90% 0%, rgb(16 181 201 / 0.25), transparent 70%),
+      linear-gradient(140deg, var(--hero-from), var(--hero-to));
+  }
+  .eyebrow.light {
+    color: #7cc0ff;
+  }
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin: 2.5rem 0 3rem;
+    background: rgb(255 255 255 / 0.1);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .metric {
+    display: grid;
+    gap: 0.35rem;
+    padding: 2rem 1.75rem;
+    background: rgb(8 22 46 / 0.65);
+  }
+  .metric-value {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(2.2rem, 4vw, 3rem);
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+  .metric-label {
+    color: #a9bcd8;
+  }
+
+  /* ---------- Posts ---------- */
+  .split-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+  .split-head .section-lead {
+    margin-bottom: 2rem;
+  }
+  .posts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* ---------- Credentials ---------- */
+  .cred-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
+  }
+  .cred {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.25rem 1.4rem;
+  }
+  .cred-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+  .cred-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  .cred-kind {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .cred h3 {
+    font-size: 1rem;
+    margin: 0.1rem 0 0;
+  }
+  .note {
+    margin: 2rem 0 0;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ---------- Contact ---------- */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 56px;
+    align-items: start;
+  }
+  .info {
+    list-style: none;
+    margin: 0 0 2rem;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .info li {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .info small {
+    display: block;
+    color: var(--muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+  }
+  .info a {
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .info a:hover {
+    color: var(--brand);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 980px) {
+    .hero-grid,
+    .about-grid,
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+    .hero-visual {
+      width: min(100%, 360px);
+      margin-top: 1rem;
+    }
+    .chip-cert {
+      left: -12px;
+    }
+    .contact-chip {
+      right: -12px;
+    }
+    .posts,
+    .impact-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 640px) {
+    .hero {
+      padding: 48px 0 80px;
+    }
+    .hero-stats {
+      gap: 1.5rem;
+    }
+    .hero-stats dt {
+      font-size: 1.6rem;
+    }
+    .posts,
+    .impact-grid {
+      grid-template-columns: 1fr;
+    }
+    .chip-cert {
+      left: 8px;
+      top: 12px;
+    }
+    .contact-chip {
+      right: 8px;
+      bottom: -20px;
+    }
+    .cred-grid {
+      grid-template-columns: 1fr;
+    }
+    .timeline::before {
+      left: 21px;
+    }
+    .tl-item {
+      grid-template-columns: 44px 1fr;
+      gap: 0.85rem;
+    }
+    .tl-badge {
+      width: 44px;
+      height: 44px;
+      font-size: 0.72rem;
+      border-radius: 12px;
+    }
+    .tl-card {
+      padding: 1.1rem 1.15rem;
+    }
+  }
+</style>

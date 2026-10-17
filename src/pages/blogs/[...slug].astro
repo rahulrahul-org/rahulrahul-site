@@ -1,0 +1,265 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../site';
+import { formatDate, getPosts, readingTime } from '../../utils';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
+const { title, description, pubDate, updatedDate, tags } = post.data;
+---
+
+<Base title={`${title} - Rahul`} description={description} type="article">
+  <article>
+    <header class="post-hero">
+      <div class="container narrow">
+        <a href="/blogs" class="back">← All case studies &amp; blogs</a>
+        <h1>{title}</h1>
+        <p class="meta">
+          <span>By {SITE.name}</span>
+          <span aria-hidden="true">·</span>
+          <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+          {updatedDate && <span>(updated {formatDate(updatedDate)})</span>}
+          <span aria-hidden="true">·</span>
+          <span>{readingTime(post.body)} min read</span>
+        </p>
+        {tags.length > 0 && <ul class="tags">{tags.map((t) => <li>{t}</li>)}</ul>}
+      </div>
+    </header>
+
+    <div class="container narrow prose">
+      <Content />
+    </div>
+
+    <div class="container narrow">
+      <aside class="cta card">
+        <div>
+          <h2>Facing a similar challenge?</h2>
+          <p>Let's talk about how this approach could work for your organisation.</p>
+        </div>
+        <a class="btn btn-primary" href="/#contact">Get in touch</a>
+      </aside>
+
+      <nav class="pager" aria-label="More posts">
+        {
+          older ? (
+            <a href={`/blogs/${older.id}`}>
+              <small>← Previous</small>
+              {older.data.title}
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          newer && (
+            <a href={`/blogs/${newer.id}`} class="next">
+              <small>Next →</small>
+              {newer.data.title}
+            </a>
+          )
+        }
+      </nav>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .narrow {
+    max-width: 780px;
+  }
+  .post-hero {
+    color: #fff;
+    padding: 64px 0 56px;
+    margin-bottom: 48px;
+    background:
+      radial-gradient(600px 300px at 90% 0%, rgb(16 181 201 / 0.25), transparent 70%),
+      linear-gradient(140deg, var(--hero-from), var(--hero-to));
+  }
+  .back {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    color: #9cc8ff;
+    text-decoration: none;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  .back:hover {
+    color: #fff;
+  }
+  h1 {
+    font-size: clamp(1.9rem, 4.2vw, 2.8rem);
+    font-weight: 800;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    color: #b5c6e0;
+    margin: 0 0 1.25rem;
+    font-size: 0.95rem;
+  }
+  .tags {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .tags li {
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.1);
+    border: 1px solid rgb(255 255 255 / 0.18);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  /* Markdown content */
+  .prose {
+    font-size: 1.07rem;
+    line-height: 1.8;
+  }
+  .prose :global(h2) {
+    font-size: 1.65rem;
+    margin: 2.6rem 0 0.9rem;
+  }
+  .prose :global(h3) {
+    font-size: 1.25rem;
+    margin: 2rem 0 0.6rem;
+  }
+  .prose :global(p),
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 1.2rem;
+  }
+  .prose :global(li) {
+    margin-bottom: 0.4rem;
+  }
+  .prose :global(li > ul) {
+    margin: 0.4rem 0 0;
+  }
+  .prose :global(img) {
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    margin: 2rem auto;
+    background: #fff;
+  }
+  .prose :global(blockquote) {
+    margin: 0 0 1.5rem;
+    padding: 0.7rem 1.1rem;
+    border-left: 4px solid var(--brand);
+    background: var(--brand-soft);
+    border-radius: 0 10px 10px 0;
+  }
+  .prose :global(blockquote p) {
+    margin: 0;
+  }
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 1.8rem;
+    font-size: 0.95rem;
+    display: block;
+    overflow-x: auto;
+  }
+  .prose :global(th),
+  .prose :global(td) {
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+  .prose :global(th) {
+    background: var(--surface-2);
+    font-family: var(--font-head);
+  }
+  .prose :global(code) {
+    font-size: 0.9em;
+    background: var(--surface-2);
+    padding: 0.15em 0.4em;
+    border-radius: 6px;
+  }
+  .prose :global(pre) {
+    padding: 1.1rem 1.25rem;
+    border-radius: 12px;
+    overflow-x: auto;
+    font-size: 0.9rem;
+  }
+  .prose :global(pre code) {
+    background: none;
+    padding: 0;
+  }
+  .prose :global(a) {
+    word-break: break-word;
+  }
+
+  .cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin: 3.5rem 0 2rem;
+    padding: 1.75rem 2rem;
+    background:
+      radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 60%),
+      var(--surface);
+  }
+  .cta h2 {
+    font-size: 1.3rem;
+    margin: 0 0 0.25rem;
+  }
+  .cta p {
+    margin: 0;
+    color: var(--muted);
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 96px;
+  }
+  .pager a {
+    display: grid;
+    gap: 0.2rem;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    color: var(--text);
+    text-decoration: none;
+    font-family: var(--font-head);
+    font-weight: 600;
+  }
+  .pager a:hover {
+    border-color: var(--brand);
+  }
+  .pager small {
+    color: var(--brand);
+  }
+  .pager .next {
+    text-align: right;
+  }
+  @media (max-width: 640px) {
+    .pager {
+      grid-template-columns: 1fr;
+    }
+    .pager .next {
+      text-align: left;
+    }
+    .cta {
+      padding: 1.25rem;
+    }
+  }
+</style>

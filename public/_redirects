@@ -1,0 +1,6 @@
+# Cloudflare Pages / Netlify redirects: keep the old blog URLs working (and their SEO).
+/blogs/blog-article-69419  /blogs/orchestrator-agentic-loop-from-scratch  301
+/blogs/blog-article-48500  /blogs/enterprise-ai-tco                       301
+/blogs/blog-article-77398  /blogs/agentic-workflow-orchestration-layer    301
+/blogs/blog-article-74527  /blogs/aws-cloud-foundation-uplift             301
+/blogs/blog-article-55206  /blogs/cloud-migration-playbook                301
