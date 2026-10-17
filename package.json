@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "npm run build && wrangler pages dev dist",
-    "check": "astro check"
+    "preview": "npm run build && wrangler dev",
+    "check": "astro check",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

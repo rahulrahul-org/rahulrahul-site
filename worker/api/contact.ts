@@ -1,13 +1,13 @@
 // POST /api/contact - receives the contact form and emails it to you.
 //
 // Uses Resend (https://resend.com, free tier: 3,000 emails/month). To enable, set these
-// in Cloudflare Pages -> Settings -> Variables and Secrets (or .dev.vars locally):
+// in Cloudflare dashboard -> your Worker -> Settings -> Variables and Secrets (or .dev.vars locally):
 //   RESEND_API_KEY   = re_xxx               (secret)
 //   CONTACT_TO_EMAIL = rahul@rahulrahul.com.au
 //   CONTACT_FROM_EMAIL = "Website <contact@rahulrahul.com.au>"  (a domain verified in Resend)
 // Until it is configured, the endpoint returns 503 and the form falls back to mailto.
 
-import { json, type Env } from './_lib';
+import { json, type Handler } from '../lib';
 
 interface ContactBody {
   name?: string;
@@ -16,7 +16,7 @@ interface ContactBody {
   company?: string; // honeypot
 }
 
-export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+export const POST: Handler = async (request, env) => {
   let body: ContactBody;
   try {
     body = await request.json();

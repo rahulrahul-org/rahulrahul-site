@@ -7,9 +7,9 @@
 // This demo uses Open-Meteo (free, no key). To call an API that needs a key, put the key in
 // EXAMPLE_API_KEY (Cloudflare dashboard or .dev.vars) and send it as shown below.
 
-import { json, type Env } from './_lib';
+import { json, type Handler } from '../lib';
 
-export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
+export const GET: Handler = async (request, env) => {
   const url = new URL(request.url);
   const city = (url.searchParams.get('city') || 'Melbourne').slice(0, 60);
 
