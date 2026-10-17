@@ -83,14 +83,31 @@ Add new secret names to the `Env` interface in `worker/lib.ts`. Put them in `.de
 
 ### Enabling the contact form
 
-The form posts to `/api/contact`, which sends you an email through [Resend](https://resend.com) (free: 3,000 emails/month). Until this is configured, the form falls back to opening the visitor's email app.
+The form posts to `/api/contact`, which emails you through **Amazon SES** (us-east-1). `rahulrahul.com.au` is already verified there, so no DNS changes are needed. Until the keys below are set, the form falls back to opening the visitor's email app.
 
-1. Sign up at resend.com, verify the `rahulrahul.com.au` domain, and create an API key.
-2. In the Cloudflare dashboard -> Workers & Pages -> your Worker -> Settings -> Variables and Secrets, add:
-   - `RESEND_API_KEY` (as a secret)
-   - `CONTACT_FROM_EMAIL` = `Website <contact@rahulrahul.com.au>`
-   - (`CONTACT_TO_EMAIL` is already set in `wrangler.jsonc`)
-3. Redeploy.
+1. In AWS IAM, create a user (e.g. `website-contact-form`) with **no console access**, and attach this inline policy so the key can only send mail from the website address:
+
+   ```json
+   {
+     "Version": "2012-10-17",
+     "Statement": [{
+       "Effect": "Allow",
+       "Action": "ses:SendEmail",
+       "Resource": "*",
+       "Condition": { "StringEquals": { "ses:FromAddress": "website@rahulrahul.com.au" } }
+     }]
+   }
+   ```
+
+2. Create an access key for that user (use case: "Application running outside AWS").
+3. In the Cloudflare dashboard -> Workers & Pages -> your Worker -> Settings -> Variables and Secrets, add both as type **Secret**:
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY`
+
+   `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` and `AWS_REGION` are already set in `wrangler.jsonc`.
+4. Secrets take effect immediately; submit the form to test.
+
+If SES is still in its *sandbox*, that's fine: you're only sending to your own verified domain.
 
 ## Free hosting: Cloudflare Workers
 

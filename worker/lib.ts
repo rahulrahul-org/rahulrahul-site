@@ -3,7 +3,9 @@
 /** Bindings, environment variables and secrets available to the Worker. Add yours here. */
 export interface Env {
   ASSETS: Fetcher; // the built site in ./dist
-  RESEND_API_KEY?: string;
+  AWS_ACCESS_KEY_ID?: string;
+  AWS_SECRET_ACCESS_KEY?: string;
+  AWS_REGION?: string;
   CONTACT_TO_EMAIL?: string;
   CONTACT_FROM_EMAIL?: string;
   EXAMPLE_API_KEY?: string;

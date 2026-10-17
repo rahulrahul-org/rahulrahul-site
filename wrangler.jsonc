@@ -16,6 +16,8 @@
   // Non-secret variables. Put secrets (API keys) in .dev.vars locally and in the
   // dashboard (Worker -> Settings -> Variables and Secrets) for production.
   "vars": {
-    "CONTACT_TO_EMAIL": "rahul@rahulrahul.com.au"
+    "CONTACT_TO_EMAIL": "rahul@rahulrahul.com.au",
+    "CONTACT_FROM_EMAIL": "Website <website@rahulrahul.com.au>",
+    "AWS_REGION": "us-east-1"
   }
 }
